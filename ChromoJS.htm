@@ -1,0 +1,134 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Chromo</title>
+    <style type="text/css">
+        #ParentContainer
+        {
+            position: relative;
+            width: 300px;
+            height: 120px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: xx-small;
+        }
+        
+        #LeftContainer
+        {
+            left: 0;
+            background-color: #E638B5;
+            position: absolute;
+            width: 50%;
+            height: 100%;
+        }
+        
+        #RightContainer
+        {
+            right: 0;
+            position: absolute;
+            width: 50%;
+            height: 100%;
+        }
+        
+        #DateDiv
+        {
+            position: absolute;
+            left: 0;
+            width: 90%;
+            background-color: White;
+            text-align: right; /*Rounded Corners*/
+            -webkit-border-top-right-radius: 3px;
+            -webkit-border-bottom-right-radius: 3px;
+            -moz-border-radius-topright: 3px;
+            -moz-border-radius-bottomright: 3px;
+            border-top-right-radius: 3px;
+            border-bottom-right-radius: 3px;
+        }
+        
+        #HourDiv
+        {
+            position: absolute;
+            right: 0;
+            width: 90%;
+            background-color: White; /*Rounded Corners*/
+            -webkit-border-top-left-radius: 3px;
+            -webkit-border-bottom-left-radius: 3px;
+            -moz-border-radius-topleft: 3px;
+            -moz-border-radius-bottomleft: 3px;
+            border-top-left-radius: 3px;
+            border-bottom-left-radius: 3px;
+        }
+    </style>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.min.js" ></script>
+    <script type="text/javascript">
+        var secondsFactor;
+        var daysFactor;
+        var colors = new Array('00D5E1', '00D294', '00CB58', '26E058', '7AF049', 'BCFF2D', 'FFFF22', 'FFFF41', 'FFFF30', 'FFAF0B', 'FF6E0C', 'FF1A33',
+                               'FF0041', 'FF1F77', 'FF37B2', 'FB48BC', 'E638B5', 'BC35B7', '7953CB', '2463DB', '0077EB', '00A3FF', '00C8FF', '00DCFF');
+
+        $(function () {
+            //alert(CurrentMoonPhase());
+
+            secondsFactor = (($("#ParentContainer").height() - $("#HourDiv").height()) / 60);
+            daysFactor = (($("#ParentContainer").height() - $("#DateDiv").height()) / daysInCurrentMonth());
+
+            setInterval('UpdateDateAndTime()', 1000);
+        });
+
+        function CurrentMoonPhase() {
+            var d = new Date();
+            var year = d.getYear();
+            var month = d.getMonth();
+            var day = d.getDay();
+
+            var r = year % 100;
+            r %= 19;
+            if (r > 9) { r -= 19; }
+            r = ((r * 11) % 30) + parseInt(month) + parseInt(day);
+            if (month < 3) { r += 2; }
+            r -= ((year < 2000) ? 4 : 8.3);
+            r = Math.floor(r + 0.5) % 30;
+            return (r < 0) ? r + 30 : r;
+        }
+
+        function GetCurrentDateTime() {
+            var d = new Date();
+            var s = d.getSeconds();
+            var m = d.getMonth();
+            var h = d.getHours();
+
+            return { Second: s, Month: m, Hours: h, Date: d.toLocaleDateString(), Time: d.toLocaleTimeString() };
+        }
+
+        function daysInCurrentMonth() {
+            var d = new Date();
+            return new Date(d.getYear(), d.getMonth(), 0).getDate();
+        }
+
+        function UpdateDateAndTime() {
+            var currDate = GetCurrentDateTime();
+
+            $('#HourDiv').empty();
+            $('#HourDiv').append(currDate.Time);
+            $("#HourDiv").animate({ 'top': (currDate.Second * secondsFactor) + 'px' }, "fast");
+            $('#RightContainer').css("background-color", '#' + colors[currDate.Hours]);
+
+            $('#DateDiv').empty();
+            $('#DateDiv').append(currDate.Date);
+            $("#DateDiv").animate({ 'top': (currDate.Month * daysFactor) + 'px' }, "fast");
+        }
+    </script>
+</head>
+<body>
+    <div id="ParentContainer">
+        <div id="LeftContainer">
+            <div id="DateDiv">
+                00:00:00
+            </div>
+        </div>
+        <div id="RightContainer">
+            <div id="HourDiv">
+                00:00:00</div>
+        </div>
+    </div>
+</body>
+</html>

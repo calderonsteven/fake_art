@@ -1,0 +1,25 @@
+﻿<html>
+<head>
+    <title>css rainbow</title>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            setInterval("cambiarcolor()", 250);
+        });
+
+        var colors = ["red", "orange", "yellow", "green", "blue", "indigo", "violet"];
+        function cambiarcolor() {
+            /*webkit gradient*/
+            var gradient = "-webkit-gradient( linear, left top, right bottom, " +
+                            "color-stop(0.00, "+ colors[0] +"), color-stop(16%, "+ colors[1] +"), color-stop(32%, "+ colors[2] +"), "+
+                            "color-stop(48%, "+ colors[3] +"), color-stop(60%, "+ colors[4] +"), color-stop(76%, "+ colors[5] +") , color-stop(1.00, "+ colors[6] +") )";
+
+            $("body").css("background-image", gradient);
+
+            colors.unshift(colors.pop());            
+        }
+    </script>
+</head>
+<body>
+</body>
+</html>
